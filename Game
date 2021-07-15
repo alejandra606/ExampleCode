@@ -1,0 +1,87 @@
+local BaseObject = require(com.codekingdoms.roblox.base.BaseObject)
+local Player = require(space.codekingdoms.ckalejandram.basicgameloop.Player)
+local Colors = require(com.codekingdoms.roblox.lib.Colors)
+local Strings = require(com.codekingdoms.roblox.lib.Strings)
+local Input = require(com.codekingdoms.roblox.lib.Input)
+local Game = BaseObject:Extend()
+
+-- @field {Boolean} gameActive
+-- @field {roblox.class.Vector3} arenaCenter
+-- @field {roblox.class.Vector3} spawnPosition
+-- @field {space.codekingdoms.ckalejandram.basicgameloop.Player} survivor
+
+function Game:OnCreate()
+
+	self.gameActive = false
+	self.arenaCenter = Vector3.new(-19.071, 0.5, 25.58)
+	self.spawnPosition = Vector3.new(0, -10, 0)
+	self:Start()
+
+end
+
+function Game:Start()
+
+	while (# self:GetPlayers() == 0) do
+
+		wait(2)
+
+	end
+	self:BroadcastMessage("The next round begins in 5 seconds... ", 5)
+	wait(5)
+	self.gameActive = true
+	for key, child in pairs(self:GetPlayers()) do
+
+		child:StartGame()
+
+	end
+
+end
+
+function Game:CheckGameOver()
+
+	print("true")
+	if (self.gameActive == false) then
+
+		return
+
+	end
+	print("not true")
+	local survivorCount = 0
+	self.survivor = nil
+	for key, child in pairs(self:GetPlayers()) do
+
+		if (child.inGame) then
+
+			self.survivor = child
+			survivorCount = survivorCount + 1
+
+		end
+
+	end
+	if (survivorCount <= 1) then
+
+		self:Finish(self.survivor)
+
+	end
+
+end
+-- @param {space.codekingdoms.ckalejandram.basicgameloop.Player} winner
+function Game:Finish(winner)
+
+	if (winner) then
+
+		winner.position = self.spawnPosition
+		self:BroadcastMessage("The winner is " .. winner.name, 5)
+
+	else
+
+		self:BroadcastMessage("There was no winner!", 6)
+
+	end
+	self.gameActive = false
+	wait(60)
+	self:Start()
+
+end
+
+return Game
