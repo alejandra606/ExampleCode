@@ -1,0 +1,46 @@
+local BasePlayer = require(com.codekingdoms.roblox.base.BasePlayer)
+local Game = require(space.codekingdoms.ckalejandram.basicgameloop.Game)
+local Colors = require(com.codekingdoms.roblox.lib.Colors)
+local Strings = require(com.codekingdoms.roblox.lib.Strings)
+local Input = require(com.codekingdoms.roblox.lib.Input)
+local Player = BasePlayer:Extend()
+
+-- @field {space.codekingdoms.ckalejandram.basicgameloop.Game} gameManager
+-- @field {roblox.class.Vector3} position
+-- @field {Boolean} inGame
+
+function Player:OnJoin()
+
+	self.gameManager = self:FindScript(Game)
+	self:Reset()
+
+end
+
+function Player:Reset()
+
+	self.position = self.gameManager.spawnPosition
+	self.inGame = false
+	self.gameManager:CheckGameOver()
+
+end
+
+function Player:StartGame()
+
+	self.position = self.gameManager.arenaCenter
+	self.inGame = true
+
+end
+
+function Player:OnDeath()
+
+	self:Reset()
+
+end
+
+function Player:OnRespawn()
+
+	
+
+end
+
+return Player
