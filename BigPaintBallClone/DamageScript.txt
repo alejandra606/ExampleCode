@@ -1,0 +1,22 @@
+local bullet = script.Parent
+
+local function PlayerCheck(otherPart)
+	local humanoid = otherPart.Parent:FindFirstChild('Humanoid')
+	
+	if humanoid and humanoid.Parent.Name ~= bullet.Attacker.Value then
+		
+		
+		local player = game.Players:FindFirstChild(humanoid.Parent.Name)
+		if player then
+			local tag = player:FindFirstChild('Killer')
+						
+			if tag then
+				humanoid:TakeDamage(30)
+				tag.Value = bullet.Attacker.Value
+				bullet:Destroy()
+			end
+		end
+	end
+end
+
+bullet.Touched:Connect(PlayerCheck)

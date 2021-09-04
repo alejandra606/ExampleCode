@@ -1,0 +1,21 @@
+local replicatedStorage = game:GetService('ReplicatedStorage')
+local remoteEvent = replicatedStorage:WaitForChild('ShotEvent')
+local serverStorage = game:GetService('ServerStorage')
+remoteEvent.OnServerEvent:Connect(function(player, gunPosition, mousePosition)
+
+	local bullet = serverStorage:FindFirstChild('Bullet'):Clone()
+	bullet.Parent = game.Workspace
+	
+	local damageScript = serverStorage:FindFirstChild('DamageScript'):Clone()
+	damageScript.Parent = bullet
+	
+	bullet.Attacker.Value = player.Name
+	bullet.AttackerPL.Value = player
+
+	local distance = (mousePosition - gunPosition).magnitude
+	local speed = 500
+	bullet.CFrame = CFrame.new(gunPosition, mousePosition)
+	bullet.Velocity = bullet.CFrame.lookVector * speed
+
+	--game:GetService('Debris'):AddItem(bullet, 2) -- garbage clean up system
+end)
