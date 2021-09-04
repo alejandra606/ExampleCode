@@ -1,0 +1,57 @@
+local BaseObject = require(com.codekingdoms.roblox.base.BaseObject)
+local Player = require(space.codekingdoms.ckalejandram.fadingtiles.Player)
+local Strings = require(com.codekingdoms.roblox.lib.Strings)
+local Colors = require(com.codekingdoms.roblox.lib.Colors)
+local Input = require(com.codekingdoms.roblox.lib.Input)
+local FadingTiles = BaseObject:Extend()
+
+-- @field {Boolean} isReady
+-- @field {roblox.class.Color3[]} colors
+-- @field {roblox.class.Color3} color
+
+function FadingTiles:OnCreate()
+
+	self:ColorList()
+	self.isReady = true
+
+end
+
+function FadingTiles:ColorList()
+
+	self.colors = {}
+	self.colors[0] = Colors.LIME
+	self.colors[1] = Colors.YELLOW
+	self.colors[2] = Colors.RED
+
+end
+-- @param {space.codekingdoms.ckalejandram.fadingtiles.Player} player
+function FadingTiles:OnTouched(player)
+
+	if (self.isReady) then
+
+		self:ChangeTileColor()
+
+	end
+
+end
+
+function FadingTiles:ChangeTileColor()
+
+	self.isReady = false
+	local index = 0
+	for key, child in pairs(self.colors) do
+
+		self.color = self.colors[index]
+		index = index + 1
+		wait(2)
+
+	end
+	self:Hide()
+	wait(2)
+	self.color = Colors.BLACK
+	self:Show()
+	self.isReady = true
+
+end
+
+return FadingTiles
