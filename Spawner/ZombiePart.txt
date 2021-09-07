@@ -1,0 +1,7 @@
+local BaseObject = require(com.codekingdoms.roblox.base.BaseObject)
+local ZombiePart = BaseObject:Extend()
+
+
+
+
+return ZombiePart

@@ -1,0 +1,45 @@
+local BaseObject = require(com.codekingdoms.roblox.base.BaseObject)
+local ZombiePart = require(space.codekingdoms.ckalejandram.castlebryanfinal.ZombiePart)
+local Colors = require(com.codekingdoms.roblox.lib.Colors)
+local Strings = require(com.codekingdoms.roblox.lib.Strings)
+local Input = require(com.codekingdoms.roblox.lib.Input)
+local Spawner = BaseObject:Extend()
+
+-- @field {Number} level
+-- @field {Number} zombiesLeft
+-- @field {roblox.class.Part[]} spawnPoints
+-- @field {space.codekingdoms.ckalejandram.castlebryanfinal.ZombiePart} zombie
+
+function Spawner:OnCreate()
+
+	self.level = 0
+	self.zombiesLeft = 0
+	self.spawnPoints = self.object.SpawnPoints:GetChildren()
+	self.zombie = self:FindStoredScript(ZombiePart)
+	self:SpawnWave()
+
+end
+
+function Spawner:SpawnZombie()
+
+	self.zombiesLeft = self.zombiesLeft + 1
+	local spawnPointIndex = math.random(1, # self.spawnPoints)
+	local position = self.spawnPoints[spawnPointIndex].Position
+	self.zombie:Clone(position)
+
+end
+
+function Spawner:SpawnWave()
+
+	self.level = self.level + 1
+	self:BroadcastMessage("Level " .. self.level, 5)
+	for i = 1, self.level * 2 do
+
+		self:SpawnZombie()
+		wait(1)
+
+	end
+
+end
+
+return Spawner
