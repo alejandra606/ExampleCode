@@ -1,0 +1,91 @@
+local BaseObject = require(com.codekingdoms.roblox.base.BaseObject)
+local Colors = require(com.codekingdoms.roblox.lib.Colors)
+local Strings = require(com.codekingdoms.roblox.lib.Strings)
+local Input = require(com.codekingdoms.roblox.lib.Input)
+local Game = BaseObject:Extend()
+
+-- @field {Boolean} gameActive
+
+function Game:OnCreate()
+
+	self.gameActive = false
+	self:Start()
+
+end
+
+function Game:StartForPlayers()
+
+	for key, child in pairs(self:GetPlayers()) do
+
+		child:StartGame()
+
+	end
+
+end
+
+function Game:Start()
+
+	while (# self:GetPlayers() <= 0) do
+
+		self:BroadcastMessage("Waiting for more players...", 2)
+		wait(2)
+
+	end
+	self:BroadcastMessage("The next round begins in 5 seconds...", 5)
+	wait(5)
+	self:BroadcastMessage("Go!", 5)
+	self:StartForPlayers()
+	self.gameActive = true
+	wait(30)
+	self:End()
+
+end
+
+function Game:End()
+
+	self:BroadcastMessage("Game ending... Drumroll for the results!", 5)
+	self:CalculateResults()
+	wait(5)
+	self:BroadcastMessage("Starting new game", 5)
+	self:Start()
+
+end
+
+function Game:CalculateResults()
+
+	local redPoints = 0
+	local bluePoints = 0
+	for key, child in pairs(self:GetPlayers()) do
+
+		if (child.teamName == "Red") then
+
+			redPoints = redPoints + child:GetStat("Kills")
+
+		elseif (child.teamName == "Blue") then
+
+			bluePoints = bluePoints + child:GetStat("Kills")
+
+		end
+
+	end
+	self:BroadcastMessage("red points " .. redPoints, 5)
+	wait(2)
+	self:BroadcastMessage("blue points " .. bluePoints, 5)
+	wait(2)
+	if (redPoints < bluePoints) then
+
+		self:BroadcastMessage("Blue Wins", 5)
+
+	elseif (bluePoints < redPoints) then
+
+		self:BroadcastMessage("Red Wins", 5)
+
+	else
+
+		self:BroadcastMessage("No one wins", 5)
+
+	end
+
+end
+
+return Game
